@@ -12,12 +12,12 @@ export async function POST(req: Request) {
     }
 
     // Azure Credentials
-    const tenantId = process.env.AZURE_TENANT_ID;
-    const clientId = process.env.AZURE_CLIENT_ID;
-    const clientSecret = process.env.AZURE_CLIENT_SECRET;
-    const subscriptionId = process.env.AZURE_SUBSCRIPTION_ID;
-    const resourceGroup = process.env.AZURE_RESOURCE_GROUP;
-    const vmName = process.env.AZURE_VM_NAME;
+    const tenantId = process.env.AZURE_TENANT_ID?.trim();
+    const clientId = process.env.AZURE_CLIENT_ID?.trim();
+    const clientSecret = process.env.AZURE_CLIENT_SECRET?.trim();
+    const subscriptionId = process.env.AZURE_SUBSCRIPTION_ID?.trim();
+    const resourceGroup = process.env.AZURE_RESOURCE_GROUP?.trim();
+    const vmName = process.env.AZURE_VM_NAME?.trim();
 
     if (!tenantId || !clientId || !clientSecret || !subscriptionId || !resourceGroup || !vmName) {
       return NextResponse.json({ message: "Server misconfiguration: Missing Azure credentials" }, { status: 500 });
