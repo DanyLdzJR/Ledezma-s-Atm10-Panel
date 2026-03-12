@@ -35,6 +35,7 @@ export async function POST(req: Request) {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: tokenParams.toString(),
+      cache: "no-store"
     });
 
     if (!tokenRes.ok) {
