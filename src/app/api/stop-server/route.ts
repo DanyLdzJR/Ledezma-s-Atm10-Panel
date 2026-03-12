@@ -23,15 +23,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Server misconfiguration: Missing Azure credentials" }, { status: 500 });
     }
 
-    // 1. Get Azure AD Access Token
+    // 1. Get Azure AD Access Token (v2.0)
+    const tokenUrl = `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token`;
     const tokenParams = new URLSearchParams({
       grant_type: "client_credentials",
       client_id: clientId,
       client_secret: clientSecret,
-      resource: "https://management.azure.com/",
+      scope: "https://management.azure.com/.default",
     });
 
-    const tokenRes = await fetch(`https://login.microsoftonline.com/${tenantId}/oauth2/token`, {
+    const tokenRes = await fetch(tokenUrl, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: tokenParams.toString(),
@@ -39,7 +40,8 @@ export async function POST(req: Request) {
     });
 
     if (!tokenRes.ok) {
-      throw new Error("Failed to obtain Azure AD token");
+      const errText = await tokenRes.text();
+      throw new Error(`Auth failed: ${errText}`);
     }
 
     const tokenData = await tokenRes.json();
